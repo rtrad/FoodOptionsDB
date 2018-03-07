@@ -1,0 +1,77 @@
+db.users = [
+{
+    username : 'alskdjf@gmail.com',
+    password : hashed('123oigjo13no'),
+    ratings : {
+        
+}
+]
+
+db.restaurants = 
+[
+    {
+        name: 'Chick-fil-a',
+        location : {
+            long : 33.239,
+            lat : -84.235,
+            floor : 1
+        },
+        menu_items : [
+            {
+                name : 'Chicken sandwich meal',
+                price : 8.49,
+                allergens : ['dairy', 'wheat', 'egg'],
+                characteristics : ['chicken', 'chargrilled', 'bread', 'pickles'],
+                nutrition : {
+                    calories : 430,
+                    calories_from_fat : 144,
+                    total_fat : 16,
+                    saturated_fat : 8,
+                    trans_fat : 0,
+                    cholesterol : 85,
+                    sodium : 1120,
+                    carbohydrates : 37,
+                    fiber : 3,
+                    sugars : 7,
+                    protein : 37,
+                    vitamin_a : 30,
+                    vitamin_c : 40,
+                    calcium : 25,
+                    iron : 15
+                }
+            }
+        ]
+    },
+    {
+        name: 'Chick-fil-a',
+        location : {
+            long : 33.239,
+            lat : -84.235
+        },
+        menu_items : [
+            {
+                name : 'Chargrilled Chicken sandwich',
+                price : 8.49,
+                allergens : ['dairy', 'wheat', 'egg'],
+                characteristics : ['chicken', 'chargrilled', 'bread', 'pickles'],
+                nutrition : {
+                    calories : 430,
+                    calories_from_fat : 144,
+                    total_fat : 16,
+                    saturated_fat : 8,
+                    trans_fat : 0,
+                    cholesterol : 85,
+                    sodium : 1120,
+                    carbohydrates : 37,
+                    fiber : 3,
+                    sugars : 7,
+                    protein : 37,
+                    vitamin_a : 30,
+                    vitamin_c : 40,
+                    calcium : 25,
+                    iron : 15
+                }
+            }
+        ]
+    }
+]
