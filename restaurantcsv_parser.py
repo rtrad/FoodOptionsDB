@@ -6,14 +6,12 @@ dbclient = MongoClient('localhost', 27017)
 db = dbclient.foodoptionsdb
 
 def main(file, restaurant):
-    with open(file, 'rb') as csvfile:
+    with open(file, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
-        restaurant_dict = {}
-        restaurant_dict['name'] = restaurant
-        restaurant_dict['menu_items'] = []
         for row in reader:
             item = {}
             item['name'] = row[0]
+            item['restaurant'] = restaurant
             item['nutrition'] = {}
             item['nutrition']['calories'] = row[1]
             item['nutrition']['calories_from_fat'] = row[2]
@@ -36,22 +34,22 @@ def main(file, restaurant):
                 item['allergens'].append('dairy')
             if row[18] == '1':
                 item['allergens'].append('soy')
-                
+
             if row[19] == '1':
                 item['allergens'].append('tree_nut')
-                
+
             if row[20] == '1':
                 item['allergens'].append('wheat')
-                
+
             if row[21] == '1':
                 item['allergens'].append('egg')
-                
-                
-            
-            
-            restaurant_dict['menu_items'].append(item)
-        db.restaurants.insert_one(restaurant_dict)
 
+
+
+
+            db.foods.insert_one(item)
+            
+            
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('file')
