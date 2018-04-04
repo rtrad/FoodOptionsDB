@@ -10,31 +10,38 @@
         <div class="container" style="padding-top:15px; padding-bottom:15px;">
             <div class="input-group">
                 <input id="searchbox" type="text" class="form-control" placeholder="search for food" style="border-color: #6c757d;">
-                <div class="input-group-append">
-                    <button type="button" onclick="submitSearch();" class="btn btn-outline-secondary">Search</button>
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="collapse" data-target="#advancedFilter">
-                        <span class="sr-only">Toggle advanced search</span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right" id="advancedFilter">
-                        <form class="form-horizontal">
-                            Exclude foods containing certain allergens:
-                                <div class="form-group">
-                                    <select multiple class="form-control">
-                                        <option>dairy</option>
-                                        <option>soy</option>
-                                        <option>tree nut</option>
-                                        <option>wheat</option>
-                                        <option>egg</option>
-                                    </select>
-                                </div>
-                            <div class="form-group">
-                                
+                <div class="input-group-append btn-group dropdown">
+                    <button type="button" id="textsearch" onclick="submitSearch();" class="btn btn-outline-secondary">Search</button>
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"></button>
+                    <form class="dropdown-menu dropdown-menu-right p-4" style="min-width: 330px; border-color: #6c757d;">
+                        <div class="form-group">
+                            <label>Price range:</label>
+                            <div class="input-group" align="right">
+                                <input type="number" style="border-color: #6c757d;" class="form-control"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input style="border-color: #6c757d;" type="number" class="form-control">
                             </div>
-                            <div class="form-group">
-                                
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="form-group">
+                            <label>Calorie range:</label>
+                            <div class="input-group" align="right">
+                                <input type="number" class="form-control" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" style="border-color: #6c757d;">
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="form-group">
+                            <label>Exclude foods containing certain allergens:</label>
+                            <div class="input-group" align="right">
+                                <select multiple class="form-control" style="border-color: #6c757d;"> 
+                                    <option>dairy</option> 
+                                    <option>soy</option> 
+                                    <option>tree nut</option> 
+                                    <option>wheat</option> 
+                                    <option>egg</option> 
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" id="advancedsearch" class="btn btn-outline-secondary">Search</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -48,6 +55,20 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
     <script type="text/javascript">
+        $(document).ready(function(){
+            $(".dropdown").on("hide.bs.dropdown", function(){
+                $("#textsearch").removeAttr("disabled");
+            });
+            $(".dropdown").on("show.bs.dropdown", function(){
+                $("#textsearch").attr("disabled", "disabled");
+            });
+            $("#searchbox").keyup(function(event) {
+                if (event.keyCode === 13) {
+                    $("#textsearch").click();
+                }
+            });
+        });
+    
         function submitSearch() {
             $.ajax({
                 type: "POST",
