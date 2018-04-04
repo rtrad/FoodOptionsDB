@@ -12,75 +12,18 @@
     </style>
 </head>
 <body>
-    <h1>Grilled Chicken Club Sandwich</h1>
+    <h1>{{ item.name }} (${{ item.price }})</h1>
+    <h2>from {{ item.restaurant }}</h2>
     <table>
+    {% for key,value in item.nutrition.iteritems() %}
         <tr>
-            <th>Calories</th>
-            <th>430</th>
+            <th>{{ key }}</th>
+            <th>{{ value }}</th>
         </tr>
-        <tr>
-            <th>Calories From Fat</th>
-            <th>144</th>
-        </tr>
-        <tr>
-            <th>Total Fat (g)</th>
-            <th>16</th>
-        </tr>
-        <tr>
-            <th>Saturated Fat (g)</th>
-            <th>8</th>
-        </tr>
-        <tr>
-            <th>Trans Fat (g)</th>
-            <th>0</th>
-        </tr>
-        <tr>
-            <th>Cholesterol (mg)</th>
-            <th>85</th>
-        </tr>
-        <tr>
-            <th>Sodium (mg)</th>
-            <th>1120</th>
-        </tr>
-        <tr>
-            <th>Carbohydrates (g)</th>
-            <th>37</th>
-        </tr>
-        <tr>
-            <th>Fiber (g)</th>
-            <th>3</th>
-        </tr>
-        <tr>
-            <th>Sugars (g)</th>
-            <th>7</th>
-        </tr>
-        <tr>
-            <th>Protein (g)</th>
-            <th>37</th>
-        </tr>
-        <tr>
-            <th>Vitamin A (% DV)</th>
-            <th>30</th>
-        </tr>
-        <tr>
-            <th>Vitamin C (% DV)</th>
-            <th>40</th>
-        </tr>
-        <tr>
-            <th>Calcium (% DV)</th>
-            <th>25</th>
-        </tr>
-        <tr>
-            <th>Iron (% DV)</th>
-            <th>15</th>
-        </tr>
-        <tr>
-            <th>Price ($)</th>
-            <th>6.19</th>
-        </tr>
+    {% endfor %}
         <tr>
             <th>Allergens</th>
-            <th>Dairy, Soy, Wheat</th>
+            <th>{{ ', '.join(item.allergens) }}</th>
         </tr>
     </table>
 </body>

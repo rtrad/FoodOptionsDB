@@ -6,11 +6,11 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-	<div class="container-fluid">
+	<div class="container-fluid" style="padding-top: 15px; padding-bottom: 15px;">
 		<div class="input-group">
-			<input type="text" class="form-control" placeholder="search for food">
+			<input id="searchbox" type="text" class="form-control" placeholder="search for food" style="border-color: #6c757d;">
 			<div class="input-group-append">
-				<button type="button" class="btn btn-outline-secondary">Search</button>
+				<button type="button" onclick="submitSearch();" class="btn btn-outline-secondary">Search</button>
 				<button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="collapse" data-target="#advancedFilter">
 					<span class="sr-only">Toggle advanced search</span>
 				</button>
@@ -38,20 +38,34 @@
 		</div>
 	</div>
 	
-	
-	<div class="container">
-		RESULTS
+	<div id="results">
+		
 	</div>
-
-
-
-
-
-
-
-
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript">
+        function submitSearch() {
+            $.ajax({
+                type: "POST",
+                url: "/search",
+                dataType : "json",
+                data: {'textvalue' : $('#searchbox').val()},
+                success: function(data) {
+                    $("#results").empty();
+                    var results_container = $('<div class="container" id="results" style="border-color:#6c757d; border: 1px solid; border-radius: .25rem;"></div>');
+                    $(results_container).append('<b>' + data.length + '</b> result' + (data.length == 1 ? '' : 's') + '<br/>');
+                    for(var i=0; i<data.length; i++){
+                        var item = data[i];
+                        var item_element = '<div class="d-lg-flex"><a href="' + '/fooditem/' + item._id['$oid'] + '">' + item.name + '</a></div>';
+                        $(results_container).append(item_element);
+                    }
+                    $("#results").append(results_container);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
