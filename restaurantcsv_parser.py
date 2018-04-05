@@ -8,6 +8,7 @@ db = dbclient.foodoptionsdb
 def main(file, restaurant):
     with open(file, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)
         for row in reader:
             item = {}
             item['name'] = row[0]
