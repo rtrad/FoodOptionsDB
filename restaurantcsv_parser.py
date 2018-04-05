@@ -5,30 +5,106 @@ from pymongo import MongoClient
 dbclient = MongoClient('localhost', 27017)
 db = dbclient.foodoptionsdb
 
+restaurant_location = {
+    'Chick-fil-a' : {
+        'lat':33.773872, 
+        'lng':-84.398900,
+        'floor' : 1
+    },
+    'Panda Express' : {
+        'lat':33.773670, 
+        'lng':-84.398213,
+        'floor' : 1
+    },
+    'Taco Bell' : {
+        'lat':33.773807, 
+        'lng':-84.398724,
+        'floor' : 1
+    }
+}
+
+
+
 def main(file, restaurant):
+    first = True
     with open(file, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for row in reader:
+            if first:
+                first = False
+                continue
             item = {}
             item['name'] = row[0]
-            item['restaurant'] = restaurant
+            item['restaurant'] = {
+                'name': restaurant,
+                'location' : restaurant_location[restaurant]
+            }
             item['nutrition'] = {}
-            item['nutrition']['calories'] = row[1]
-            item['nutrition']['calories_from_fat'] = row[2]
-            item['nutrition']['total_fat'] = row[3]
-            item['nutrition']['saturated_fat'] = row[4]
-            item['nutrition']['trans_fat'] = row[5]
-            item['nutrition']['cholesterol'] = row[6]
-            item['nutrition']['sodium'] = row[7]
-            item['nutrition']['carbohydrates'] = row[8]
-            item['nutrition']['fiber'] = row[9]
-            item['nutrition']['sugars'] = row[10]
-            item['nutrition']['protein'] = row[11]
-            item['nutrition']['vatamin_a'] = row[12]
-            item['nutrition']['vitamin_c'] = row[13]
-            item['nutrition']['calcium'] = row[14]
-            item['nutrition']['iron'] = row[15]
-            item['price'] = row[16]
+            
+            try:
+                item['nutrition']['Calories'] = float(row[1])
+            except:
+                item['nutrition']['Calories'] = row[1]
+            try:
+                item['nutrition']['Calories From Fat'] = float(row[2])
+            except:
+                item['nutrition']['Calories From Fat'] = row[2]
+            try:
+                item['nutrition']['Total Fat (g)'] = float(row[3])
+            except:
+                item['nutrition']['Total Fat (g)'] = row[3]
+            try:
+                item['nutrition']['Saturated Fat (g)'] = float(row[4])
+            except:
+                item['nutrition']['Saturated Fat (g)'] = row[4]
+            try:
+                item['nutrition']['Trans Fat (g)'] = float(row[5])
+            except:
+                item['nutrition']['Trans Fat (g)'] = row[5]
+            try:
+                item['nutrition']['Cholesterol (mg)'] = float(row[6])
+            except:
+                item['nutrition']['Cholesterol (mg)'] = row[6]
+            try:
+                item['nutrition']['Sodium (mg)'] = float(row[7])
+            except:
+                item['nutrition']['Sodium (mg)'] = row[7]
+            try:
+                item['nutrition']['Carbohydrates (g)'] = float(row[8])
+            except:
+                item['nutrition']['Carbohydrates (g)'] = row[8]
+            try:
+                item['nutrition']['Fiber (g)'] = float(row[9])
+            except:
+                item['nutrition']['Fiber (g)'] = row[9]
+            try:
+                item['nutrition']['Sugars (g)'] = float(row[10])
+            except:
+                item['nutrition']['Sugars (g)'] = row[10]
+            try:
+                item['nutrition']['Protein (g)'] = float(row[11])
+            except:
+                item['nutrition']['Protein (g)'] = row[11]
+            try:
+                item['nutrition']['Vitamin A (% DV)'] = float(row[12])
+            except:
+                item['nutrition']['Vitamin A (% DV)'] = row[12]
+            try:
+                item['nutrition']['Vitamin C (% DV)'] = float(row[13])
+            except:
+                item['nutrition']['Vitamin C (% DV)'] = row[13]
+            try:
+                item['nutrition']['Calcium (% DV)'] = float(row[14])
+            except:
+                item['nutrition']['Calcium (% DV)'] = row[14]
+            try:
+                item['nutrition']['Iron (% DV)'] = float(row[15])
+            except:
+                item['nutrition']['Iron (% DV)'] = row[15]
+            try:
+                item['price'] = float(row[16])
+            except:
+                item['price'] = row[16]
             item['allergens'] = []
             if row[17] == '1':
                 item['allergens'].append('dairy')

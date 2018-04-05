@@ -13,7 +13,7 @@
 </head>
 <body>
     <h1>{{ item.name }} (${{ item.price }})</h1>
-    <h2>from {{ item.restaurant }}</h2>
+    <h2>from {{ item.restaurant.name }}</h2>
     <table>
     {% for key,value in item.nutrition.iteritems() %}
         <tr>

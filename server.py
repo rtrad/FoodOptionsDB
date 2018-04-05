@@ -26,7 +26,9 @@ def search():
         items = db.foods.find({'$text' : {'$search' : request.form['textvalue']}})
     else:
         items = db.foods.find({})
-    return json_util.dumps(items)
+        
+    locations = items.distinct('restaurant')
+    return json_util.dumps({'items' : items, 'locations' : locations})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
