@@ -26,14 +26,10 @@ restaurant_location = {
 
 
 def main(file, restaurant):
-    first = True
     with open(file, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         next(reader, None)
         for row in reader:
-            if first:
-                first = False
-                continue
             item = {}
             item['name'] = row[0]
             item['restaurant'] = {
