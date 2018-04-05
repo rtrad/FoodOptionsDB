@@ -29,6 +29,7 @@ def main(file, restaurant):
     first = True
     with open(file, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
+        next(reader, None)
         for row in reader:
             if first:
                 first = False
@@ -40,71 +41,22 @@ def main(file, restaurant):
                 'location' : restaurant_location[restaurant]
             }
             item['nutrition'] = {}
-            
-            try:
-                item['nutrition']['Calories'] = float(row[1])
-            except:
-                item['nutrition']['Calories'] = row[1]
-            try:
-                item['nutrition']['Calories From Fat'] = float(row[2])
-            except:
-                item['nutrition']['Calories From Fat'] = row[2]
-            try:
-                item['nutrition']['Total Fat (g)'] = float(row[3])
-            except:
-                item['nutrition']['Total Fat (g)'] = row[3]
-            try:
-                item['nutrition']['Saturated Fat (g)'] = float(row[4])
-            except:
-                item['nutrition']['Saturated Fat (g)'] = row[4]
-            try:
-                item['nutrition']['Trans Fat (g)'] = float(row[5])
-            except:
-                item['nutrition']['Trans Fat (g)'] = row[5]
-            try:
-                item['nutrition']['Cholesterol (mg)'] = float(row[6])
-            except:
-                item['nutrition']['Cholesterol (mg)'] = row[6]
-            try:
-                item['nutrition']['Sodium (mg)'] = float(row[7])
-            except:
-                item['nutrition']['Sodium (mg)'] = row[7]
-            try:
-                item['nutrition']['Carbohydrates (g)'] = float(row[8])
-            except:
-                item['nutrition']['Carbohydrates (g)'] = row[8]
-            try:
-                item['nutrition']['Fiber (g)'] = float(row[9])
-            except:
-                item['nutrition']['Fiber (g)'] = row[9]
-            try:
-                item['nutrition']['Sugars (g)'] = float(row[10])
-            except:
-                item['nutrition']['Sugars (g)'] = row[10]
-            try:
-                item['nutrition']['Protein (g)'] = float(row[11])
-            except:
-                item['nutrition']['Protein (g)'] = row[11]
-            try:
-                item['nutrition']['Vitamin A (% DV)'] = float(row[12])
-            except:
-                item['nutrition']['Vitamin A (% DV)'] = row[12]
-            try:
-                item['nutrition']['Vitamin C (% DV)'] = float(row[13])
-            except:
-                item['nutrition']['Vitamin C (% DV)'] = row[13]
-            try:
-                item['nutrition']['Calcium (% DV)'] = float(row[14])
-            except:
-                item['nutrition']['Calcium (% DV)'] = row[14]
-            try:
-                item['nutrition']['Iron (% DV)'] = float(row[15])
-            except:
-                item['nutrition']['Iron (% DV)'] = row[15]
-            try:
-                item['price'] = float(row[16])
-            except:
-                item['price'] = row[16]
+            item['nutrition']['Calories'] = int(row[1])
+            item['nutrition']['Calories From Fat'] = int(row[2])
+            item['nutrition']['Total Fat (g)'] = int(row[3])
+            item['nutrition']['Saturated Fat (g)'] = int(row[4])
+            item['nutrition']['Trans Fat (g)'] = int(row[5])
+            item['nutrition']['Cholesterol (mg)'] = int(row[6])
+            item['nutrition']['Sodium (mg)'] = int(row[7])
+            item['nutrition']['Carbohydrates (g)'] = int(row[8])
+            item['nutrition']['Fiber (g)'] = int(row[9])
+            item['nutrition']['Sugars (g)'] = int(row[10])
+            item['nutrition']['Protein (g)'] = int(row[11])
+            item['nutrition']['Vitamin A (% DV)'] = int(row[12])
+            item['nutrition']['Vitamin C (% DV)'] = int(row[13])
+            item['nutrition']['Calcium (% DV)'] = int(row[14])
+            item['nutrition']['Iron (% DV)'] = int(row[15])
+            item['price'] = float(row[16])
             item['allergens'] = []
             if row[17] == '1':
                 item['allergens'].append('dairy')
