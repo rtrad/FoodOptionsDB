@@ -3,27 +3,179 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            text-align:left;
-        }
-    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 </head>
 <body>
-    <h1>{{ item.name }} (${{ item.price }})</h1>
-    <h2>from {{ item.restaurant.name }}</h2>
-    <table>
-    {% for key,value in item.nutrition.iteritems() %}
-        <tr>
-            <th>{{ key }}</th>
-            <th>{{ value }}</th>
-        </tr>
-    {% endfor %}
-        <tr>
-            <th>Allergens</th>
-            <th>{{ ', '.join(item.allergens) }}</th>
-        </tr>
-    </table>
+	<div class="d-inline-flex justify-content-center" style="flex-wrap: nowrap;">
+	{% for item in items %}
+		<div class="p-4" style="min-width: 400px; width: 400px;">
+            <div style="height: 50px; overflow:hidden; padding-bottom:8px;">
+                <div style="height:526px; overflow-x: auto; white-space: nowrap;">
+                    <h1><a href="/fooditem/{{ item._id }}"> {{ item.name }} </a></h1>
+                </div>
+            </div>
+            <h5>&nbsp;from {{ item.restaurant.name }}
+                <span class="float-right"><b>${{ '?.??' if item.price == '' else '%0.2f' % item.price }}</b></span>
+            </h5>
+			<div style="border-color:#6c757d; border:1px solid; border-radius:.25rem; padding: 8px;">
+                <div class="row">
+                    <div class="col col-9">
+                        <h3><b>Calories</b></h3>
+                    </div>
+                    <div class="col col-3">
+                        <h3 class="float-right"><b>{{ '%0.0f' % item.nutrition['Calories'] }}</b></h3>
+                    </div>                
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6>&emsp;Calories from Fat</h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ '%0.0f' % item.nutrition['Calories From Fat'] }}</h6>
+                    </div>                
+                </div>
+                
+                <br/>
+                
+                <div class="row" on>
+                    <div class="col col-9">
+                        <h6><b>Total Fat (g)</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Total Fat (g)'] }}</h6>
+                    </div>                
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6>&emsp;Saturated Fat</h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Saturated Fat (g)'] }}</h6>
+                    </div>                
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6>&emsp;<i>Trans</i> Fat</h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Trans Fat (g)'] }}</h6>
+                    </div>                
+                </div>
+                
+                
+                <div class="row">
+                    <div class="col col-9">
+                        <h6><b>Cholesterol (mg)</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Cholesterol (mg)'] }}</h6>
+                    </div>                
+                </div>
+                
+                <div class="row">
+                    <div class="col col-9">
+                        <h6><b>Sodium (mg)</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Sodium (mg)'] }}</h6>
+                    </div>                
+                </div>
+                
+                <div class="row">
+                    <div class="col col-9">
+                        <h6><b>Total Carbohydrates (g)</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Carbohydrates (g)'] }}</h6>
+                    </div>                
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6>&emsp;Fiber</h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Fiber (g)'] }}</h6>
+                    </div>                
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6>&emsp;Sugars</h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Sugars (g)'] }}</h6>
+                    </div>                
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6><b>Protein (g)</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ item.nutrition['Protein (g)'] }}</h6>
+                    </div>                
+                </div>
+                
+                <br/>
+                
+                <div class="row">
+                    <div class="col col-12">
+                        <h6 class="float-right"><b>% Daily Value</b></h6>
+                    </div>              
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6><b>Vitamin A</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ 'N/A' if item.nutrition['Vitamin A (% DV)'] == '' else item.nutrition['Vitamin A (% DV)'] }}</h6>
+                    </div>                
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6><b>Vitamin C</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ 'N/A' if item.nutrition['Vitamin C (% DV)'] == '' else item.nutrition['Vitamin C (% DV)'] }}</h6>
+                    </div>                
+                </div>
+                
+                <div class="row">
+                    <div class="col col-9">
+                        <h6><b>Iron</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ 'N/A' if item.nutrition['Iron (% DV)'] == '' else item.nutrition['Iron (% DV)'] }}</h6>
+                    </div>                
+                </div>
+                <div class="row">
+                    <div class="col col-9">
+                        <h6><b>Calcium</b></h6>
+                    </div>
+                    <div class="col col-3">
+                        <h6 class="float-right">{{ 'N/A' if item.nutrition['Calcium (% DV)'] == '' else item.nutrition['Calcium (% DV)'] }}</h6>
+                    </div>                
+                </div>
+                
+                <br/>
+                
+                <div class="row">
+                    <div class="col col-12">
+                        <h6><b>Allergens</b></h6>
+                    </div>              
+                </div>
+                <div class="row">
+                    <div class="col col-12">
+                        <h6>&emsp;{{ ', '.join(item.allergens) if item.allergens|length > 0 else 'None' }}</h6>
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
 </body>

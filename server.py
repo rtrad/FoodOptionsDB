@@ -14,10 +14,19 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/compare', methods=['GET'])
+def compare_items():
+    ids = map(lambda x: objectid.ObjectId(x), request.args.get('ids').split(','))
+    
+    items = db.foods.find({'_id' : {'$in' : ids}})
+    return render_template('food_item.html', items=items)
+
+    
 @app.route('/fooditem/<id>')
 def food_item(id):
     item = db.foods.find_one({'_id' : objectid.ObjectId(id)})
-    return render_template('food_item.html', item=item)
+    return render_template('food_item.html', items=[item])
+    
     
 @app.route('/search', methods=['POST'])
 def search():
