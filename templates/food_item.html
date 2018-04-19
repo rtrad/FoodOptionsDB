@@ -74,7 +74,7 @@
             {{ 'compare items:' if pagetype == 'compare' else 'food item:' }}
         </h2>
 	</div>
-    <div class="d-inline-flex justify-content-center" style="flex-wrap: nowrap;">
+    <div class="d-{{'inline-' if pagetype == 'compare' else ''}}flex justify-content-center" style="flex-wrap: nowrap;">
 	{% for item in items %}
 		<div class="p-4" style="min-width: 400px; width: 400px;">
             <div style="height: 50px; overflow:hidden; padding-bottom:8px;">
@@ -245,14 +245,14 @@
 			</div>
             <div>
                 <h3>Tags: {{ ', '.join(item.tags) if item.tags|length > 0 else 'None'}}</h3>
-                {# {% if not pagetype == 'compare' %} #}
+                {% if not pagetype == 'compare' %}
                     <div class="input-group">
                         <input id="addtags_{{item._id}}" type="text" class="form-control" placeholder="enter new tag" style="border-color: black;">
                         <div class="input-group-append">
                             <button type="button" id="submitTag" class="btn btn-outline-secondary" onclick="addTag('{{item._id}}');" style="border-color:black;">add tag</button>
                         </div>
                     </div>
-                {# {% endif %} #}
+                {% endif %}
             </div>
             {% if similar_items %}
                 <hr/>
