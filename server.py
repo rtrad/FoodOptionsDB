@@ -125,7 +125,6 @@ def advanced_search():
             filter_validation[available_filters[filter]['type']](data[filter]):
             exp = filter_construction[available_filters[filter]['type']](filter, data[filter])
             filter_expression.update(exp)
-    print filter_expression
     items = db.foods.find(filter_expression)
     locations = items.distinct('restaurant')
     return json_util.dumps({'items' : items, 'locations' : locations})
