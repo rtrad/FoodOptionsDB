@@ -7,42 +7,220 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+    <div class="modal fade" id="loginModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">login</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form class="modal-body" id="loginForm">
+                    <div class="form-group">
+                        username
+                        <input type="text" class="form-control" id="username"></input>
+                    </div>
+                    <div class="form-group">
+                        password
+                        <input type="password" class="form-control" id="password"></input>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="login();" data-dismiss="modal">login</button>
+                    <button type="button" class="btn btn-default" onclick="registerShow();" data-dismiss="modal">register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="signupModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">registration</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form class="modal-body" id="registrationForm">
+                    <div class="form-group">
+                        username
+                        <input type="text" class="form-control" id="username_reg">
+                    </div>
+                    <div class="form-group">
+                        password
+                        <input type="password" class="form-control" id="password_reg">
+                    </div>
+                    <div class="form-group">
+                        re-enter password
+                        <input type="password" class="form-control" id="passwordre_reg">
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="register();">register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="nav">
+        <h2>
+            <a href="/" data-toggle="tooltip" data-placement="bottom" title="go home"><i class="fa fa-home"></i></a>
+            {% if session['logged-in'] %}
+            <a href="#" id="login" onclick="logout();" data-toggle="tooltip" data-placement="bottom" title="logout"><i class="fa fa-sign-out"></i></a>
+            {% else %}
+            <a href="#" id="login" onclick="loginShow();" data-toggle="tooltip" data-placement="bottom" title="login"><i class="fa fa-sign-in"></i></a>
+            {% endif %}
+            campusDiningDB:
+        </h2>
+	</div>
     <div>
         <div class="container" style="padding-top:15px; padding-bottom:15px;">
             <div class="input-group">
                 <input id="searchbox" type="text" class="form-control" placeholder="search for food" style="border-color: #6c757d;">
-                <div class="input-group-append btn-group dropdown">
+                <div class="input-group-append btn-group">
                     <button type="button" id="textsearch" onclick="submitSearch();" class="btn btn-outline-secondary">search</button>
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"></button>
-                    <form class="dropdown-menu dropdown-menu-right p-4" style="min-width: 330px; border-color: #6c757d;">
-                        <div class="form-group">
-                            <label>price range:</label>
-                            <div class="input-group" align="right">
-                                <input type="number" style="border-color: #6c757d;" class="form-control"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input style="border-color: #6c757d;" type="number" class="form-control">
+                    <button type="button" class="btn btn-outline-secondary" style="border-color:#6c757d; border: 1px solid; border-top-right-radius: .25rem;border-bottom-right-radius: .25rem;" data-toggle="modal" data-target="#advancedmenu"><i class="fa fa-filter"></i></button>
+                    <div id="advancedmenu" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>advanced filter</h4>
+                                    <button type="button" class="close float-right" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="row" id="advancedSearchForm">
+                                        <div class="col col-xl-6">
+                                            <div style="padding-bottom: 10px;">
+                                                price range:
+                                                <div class="input-group" align="right">
+                                                    <input id="price_min" type="number" step=".01" style="border-color: #6c757d;" class="form-control"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input id="price_max" step=".01" style="border-color: #6c757d;" type="number" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                select restaurants:
+                                                <div class="input-group" align="right">
+                                                    <select id="restaurants" multiple class="form-control" style="border-color: #6c757d;"> 
+                                                        {% for restaurant in restaurants %}
+                                                            <option value="{{ restaurant }}">{{ restaurant }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                calorie range:
+                                                <div class="input-group" align="right">
+                                                    <input id="calories_min"type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input id="calories_max" type="number" class="form-control" step=".01" style="border-color: #6c757d;">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                calories from fat range:
+                                                <div class="input-group" align="right">
+                                                    <input id="cff_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" id="cff_max" class="form-control" step=".01" style="border-color: #6c757d;">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                total fat range:
+                                                <div class="input-group" align="right">
+                                                    <input id="tf_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="tf_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                saturated fat range:
+                                                <div class="input-group" align="right">
+                                                    <input id="sf_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="sf_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                trans fat range:
+                                                <div class="input-group" align="right">
+                                                    <input id="tsf_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="tsf_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                cholesterol range:
+                                                <div class="input-group" align="right">
+                                                    <input id="col_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="col_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                sodium range:
+                                                <div class="input-group" align="right">
+                                                    <input id="sod_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="sod_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                iron range:
+                                                <div class="input-group" align="right">
+                                                    <input id="iron_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="iron_max">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-xl-6">
+                                            <div style="padding-bottom: 10px;">
+                                                rating range:
+                                                <div class="input-group" align="right">
+                                                    <input id="rating_min" type="number"  class="form-control" step=".01" min="0" max="5" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" min="0" max="5" style="border-color: #6c757d;" id="rating_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                exclude allergens:
+                                                <div class="input-group" align="right">
+                                                    <select id="allergens" multiple class="form-control" style="border-color: #6c757d;"> 
+                                                        <option value="dairy">dairy</option> 
+                                                        <option value="soy">soy</option> 
+                                                        <option value="tree nut">tree nut</option> 
+                                                        <option value="wheat">wheat</option> 
+                                                        <option value="egg">egg</option> 
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                carbohydrates range:
+                                                <div class="input-group" align="right">
+                                                    <input id="carb_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="carb_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                fiber range:
+                                                <div class="input-group" align="right">
+                                                    <input id="fiber_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="fiber_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                sugars range:
+                                                <div class="input-group" align="right">
+                                                    <input id="sugars_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="sugars_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                protein range:
+                                                <div class="input-group" align="right">
+                                                    <input id="protein_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="protein_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                vitamin a range:
+                                                <div class="input-group" align="right">
+                                                    <input id="va_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="va_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                vitamin c range:
+                                                <div class="input-group" align="right">
+                                                    <input id="vc_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="vc_max">
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;">
+                                                calcium range:
+                                                <div class="input-group" align="right">
+                                                    <input id="calcium_min" type="number"  class="form-control" step=".01" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" step=".01" style="border-color: #6c757d;" id="calcium_max">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" onclick="advancedSearch()" id="advancedsearch" data-dismiss="modal" class="btn btn-outline-secondary">search</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="dropdown-divider"></div>
-                        <div class="form-group">
-                            <label>calorie range:</label>
-                            <div class="input-group" align="right">
-                                <input type="number" class="form-control" style="border-color: #6c757d;"> <span class="col-form-label">&nbsp;to&nbsp;</span> <input type="number" class="form-control" style="border-color: #6c757d;">
-                            </div>
-                        </div>
-                        <div class="dropdown-divider"></div>
-                        <div class="form-group">
-                            <label>exclude foods containing certain allergens:</label>
-                            <div class="input-group" align="right">
-                                <select multiple class="form-control" style="border-color: #6c757d;"> 
-                                    <option>dairy</option> 
-                                    <option>soy</option> 
-                                    <option>tree nut</option> 
-                                    <option>wheat</option> 
-                                    <option>egg</option> 
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" id="advancedsearch" class="btn btn-outline-secondary">search</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,6 +243,7 @@
         var markers = [];
 		var compareItems = new Set([]);
         var map, infoWindow;
+        var ids = new Set([]);
                
         function initMap() {
             var myStyles =[
@@ -89,20 +268,90 @@
         }
         
         $(document).ready(function(){
-            $(".dropdown").on("hide.bs.dropdown", function(){
-                $("#textsearch").removeAttr("disabled");
-            });
-            $(".dropdown").on("show.bs.dropdown", function(){
-                $("#textsearch").attr("disabled", "disabled");
-            });
             $("#searchbox").keyup(function(event) {
                 if (event.keyCode === 13) {
                     $("#textsearch").click();
                 }
             });
+            
+            $('[data-toggle="tooltip"]').tooltip();  
         });
+        
+        function login() {
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var payload = {'username' : username, 'password' : password};
+            console.log(payload);
+            $.ajax({
+                type: "POST",
+                url: "/login", 
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify({'payload' : payload}), 
+                success: function(data) {
+                    $('#login').attr('onclick','logout();');
+                    $('#login').attr('data-original-title','logout');
+                    $('#login').empty().append($('<i class="fa fa-sign-out"></i>'));
+                    $('#nav').append($('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Login successful.</div>'));
+                }, 
+                error: function(data) {
+                    $('#nav').append($('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error</strong> Login failed.</div>'));
+                }
+            });
+            $('#loginForm')[0].reset();
+        }
+        
+        function logout() {
+            $.ajax({
+                type: "POST",
+                url: "/logout", 
+                success: function(data) {
+                    $('#login').attr('onclick','loginShow();');
+                    $('#login').attr('data-original-title','login');
+                    $('#login').empty().append($('<i class="fa fa-sign-in"></i>'));
+                    $('#nav').append($('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Logout successful.</div>'));
+                }, 
+                error: function(data) {
+                    $('#nav').append($('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error</strong> Logout failed.</div>'));
+                }
+            });
+        }
+        
+        function register() {
+            if ($('#password_reg').val()!=false && $('#username_reg').val()!=false && $('#password_reg').val() == $('#passwordre_reg').val()){
+                var payload = {'username' : $('#username_reg').val(), 'password' : $('#password_reg').val()}
+                $.ajax({
+                    type: "POST",
+                    url: "/register", 
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'payload' : payload}), 
+                    success: function(data) {
+                        $('#login').attr('onclick','logout();');
+                        $('#login').attr('data-original-title','logout');
+                        $('#login').empty().append($('<i class="fa fa-sign-out"></i>'));
+                        $('#nav').append($('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Registration successful.</div>'));
+                    }, 
+                    error: function(data) {
+                        $('#nav').append($('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error</strong> Registration failed (username exists).</div>'));
+                    }
+                });
+            } else {
+                alert('error: re-enter username and password');
+            }
+            $('#registrationForm')[0].reset();
+        }
+        
+        function loginShow() {
+            $('#loginModal').modal();
+        }
+      
+        function registerShow(){
+            $('#signupModal').modal();
+        }
     
         function loadResults(data){
+            ids = new Set([]);
             var items = data['items'];
             var locations = data['locations'];
             
@@ -110,19 +359,21 @@
             var results_container = $('<div class="container" id="results" style="padding:10px; border-color:#6c757d; border: 1px solid; border-radius: .25rem;"></div>');
             var results_header = $('<div style="height: 40px; padding:3px;"><div style="display: inline-block;"><b>' + (items ? items.length : 0) + '</b> result' + (items && items.length == 1 ? '' : 's') + '<br/></div></div>');
             
+            
             if (items) {
-                $(results_header).append('<button type="button" class="btn btn-sm btn-outline-danger float-right" onclick="clearResults()">clear results</button>');
+                $(results_header).append('<button type="button" class="btn btn-sm btn-danger float-right" onclick="clearResults()">clear results</button>');
             }
             $(results_container).append(results_header);
                 
             if(markers){
                 for (var i=0; i<markers.length; i++){
                     markers[i].setMap(null);
-                    console.log(markers[i]);
                 }
             }
+            
             for(var i=0; items && i<items.length; i++){
                 var item = items[i];
+                ids.add(item._id['$oid']);
                 var price = typeof(item.price) == 'number' ? '$' + item.price.toFixed(2) : 'unknown';
                 var item_element = $('<div id="' + item._id['$oid'] + '" style="border-bottom:1px solid #6c757d; padding:3px;">' +
                         '<div class="row">' +
@@ -145,6 +396,10 @@
                 $(item_element).hover(rowHoverIn, rowHoverOut);
                 $(results_container).append(item_element);
             }
+            if(items) {
+                $(results_container).append($('<div style="height: 40px; padding:3px;"><button type="button" class="btn btn-sm btn-success float-right" onclick="compareAll()">compare all</button></div>')); 
+            }
+            
             $("#results").append(results_container);
             
             for(var i=0; locations && i<locations.length; i++){
@@ -162,9 +417,13 @@
                 
                 if (i==0){
                     map.setCenter(marker.getPosition());
-                    console.log('hi');
                 }
             }
+        }
+        
+        function compareAll() {
+            var url = '/compare?ids=' + encodeURIComponent(Array.from(ids));
+			window.open(url,'_self');
         }
         
         function rowHoverIn() {
@@ -182,6 +441,7 @@
         }
         
         function submitSearch() {
+            $("#advancedSearchForm")[0].reset();
             $("#results").empty();
             $("#results").append('<img src="static/Spinner-1s-200px.gif" style="display:block; margin:0 auto;">');
             $.ajax({
@@ -197,6 +457,85 @@
             });
         }
 		
+        function advancedSearch(){
+            $("#results").empty();
+            $("#results").append('<img src="static/Spinner-1s-200px.gif" style="display:block; margin:0 auto;">');
+            
+            
+            var payload = {}
+            
+            payload['text'] = $('#searchbox').val();
+            if ($('#price_min').val() || $('#price_max').val()){
+                payload['price'] = {'min' : $('#price_min').val() ? parseInt($('#price_min').val()) : 0, 'max' : $('#price_max').val() ? parseInt($('#price_max').val()) : 99999};
+            }
+            if ($('#calories_min').val() || $('#calories_max').val()){
+                payload['nutrition.Calories'] = {'min' : $('#calories_min').val() ? parseInt($('#calories_min').val()) : 0, 'max' : $('#calories_max').val() ? parseInt($('#calories_max').val()) : 99999};
+            }
+            if ($('#cff_min').val() || $('#cff_max').val()){
+                payload['nutrition.Calories From Fat'] = {'min' : $('#cff_min').val() ? parseInt($('#cff_min').val()) : 0, 'max' : $('#cff_max').val() ? parseInt($('#cff_max').val()) : 99999};
+            }
+            if ($('#tf_min').val() || $('#tf_max').val()){
+                payload['nutrition.Total Fat (g)'] = {'min' : $('#tf_min').val() ? parseInt($('#tf_min').val()) : 0, 'max' : $('#tf_max').val() ? parseInt($('tf_max').val()) : 99999};
+            }
+            if ($('#sf_min').val() || $('#sf_max').val()){
+                payload['nutrition.Saturated Fat (g)'] = {'min' : $('#sf_min').val() ? parseInt($('#sf_min').val()) : 0, 'max' : $('#sf_max').val() ? parseInt($('#sf_max').val()) : 99999};
+            }
+            if ($('#tsf_min').val() || $('#tsf_max').val()){
+                payload['nutrition.Trans Fat (g)'] = {'min' : $('#tsf_min').val() ? parseInt($('#tsf_min').val()) : 0, 'max' : $('#tsf_max').val() ? parseInt($('#tsf_max').val()) : 99999};
+            }
+            if ($('#col_min').val() || $('#col_max').val()){
+                payload['nutrition.Cholesterol (mg)'] = {'min' : $('#col_min').val() ? parseInt($('#col_min').val()) : 0, 'max' : $('#col_max').val() ? parseInt($('#col_max').val()) : 99999};
+            }
+            if ($('#sod_min').val() || $('#sod_max').val()){
+                payload['nutrition.Sodium (mg)'] = {'min' : $('#sod_min').val() ? parseInt($('#sod_min').val()) : 0, 'max' : $('#sod_max').val() ? parseInt($('#sod_max').val()) : 99999};
+            }
+            if ($('#carb_min').val() || $('#carb_max').val()){
+                payload['nutrition.Carbohydrates (g)'] = {'min' : $('#carb_min').val() ? parseInt($('#carb_min').val()) : 0, 'max' : $('#carb_max').val() ? parseInt($('#carb_max').val()) : 99999};
+            }
+            if ($('#fiber_min').val() || $('#fiber_max').val()){
+                payload['nutrition.Fiber (g)'] = {'min' : $('#fiber_min').val() ? parseInt($('#fiber_min').val()) : 0, 'max' : $('#fiber_max').val() ? parseInt($('#fiber_max').val()) : 99999};
+            }
+            if ($('#sugars_min').val() || $('#sugars_max').val()){
+                payload['nutrition.Sugars (g)'] = {'min' : $('#sugars_min').val() ? parseInt($('#sugars_min').val()) : 0, 'max' : $('#sugars_max').val() ? parseInt($('#sugars_max').val()) : 99999};
+            }
+            if ($('#protein_min').val() || $('#protein_max').val()){
+                payload['nutrition.Protein (g)'] = {'min' : $('#protein_min').val() ? parseInt($('#protein_min').val()) : 0, 'max' : $('#protein_max').val() ? parseInt($('#protein_max').val()) : 99999};
+            }
+            if ($('#va_min').val() || $('#va_max').val()){
+                payload['nutrition.Vitamin A (% DV)'] = {'min' : $('#va_min').val() ? parseInt($('#va_min').val()) : 0, 'max' : $('#va_max').val() ? parseInt($('#va_max').val()) : 99999};
+            }
+            if ($('#vc_min').val() || $('#vc_max').val()){
+                payload['nutrition.Vitamin C (% DV)'] = {'min' : $('#vc_min').val() ? parseInt($('#vc_min').val()) : 0, 'max' : $('#vc_max').val() ? parseInt($('#vc_max').val()) : 99999};
+            }
+            if ($('#iron_min').val() || $('#iron_max').val()){
+                payload['nutrition.Iron (% DV)'] = {'min' : $('#iron_min').val() ? parseInt($('#iron_min').val()) : 0, 'max' : $('#iron_max').val() ? parseInt($('#iron_max').val()) : 99999};
+            }
+            if ($('#calcium_min').val() || $('#calcium_max').val()){
+                payload['nutrition.Calcium (% DV)'] = {'min' : $('#calcium_min').val() ? parseInt($('#calcium_min').val()) : 0, 'max' : $('#calcium_max').val() ? parseInt($('#calcium_max').val()) : 99999};
+            }
+            if ($('#rating_min').val() || $('#rating_max').val()){
+                payload['rating'] = {'min' : $('#rating_min').val() ? parseInt($('#rating_min').val()) : 0, 'max' : $('#rating_max').val() ? parseInt($('#rating_max').val()) : 5};
+            }
+            if ($('#restaurants').val().length > 0){
+                payload['restaurant.name'] = $('#restaurants').val();
+            }
+            if ($('#allergens').val().length > 0){
+                payload['allergens'] = $('#allergens').val();
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: "/advancedsearch", 
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify({payload : payload}), 
+                success: function(data) {
+                    setTimeout(function() {
+                        loadResults(data);
+                    }, 500);
+                }    
+            });
+        }
 		
 		function toggleCompare(id) {
 			var element = $('#' + id);
@@ -226,7 +565,8 @@
 			window.open(url,'_self');
 		}
         
-        $(document).ready(submitSearch());
+        
+        $(document).ready(advancedSearch());
     </script>
     
     

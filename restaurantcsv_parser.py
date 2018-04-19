@@ -37,22 +37,22 @@ def main(file, restaurant):
                 'location' : restaurant_location[restaurant]
             }
             item['nutrition'] = {}
-            item['nutrition']['Calories'] = int(row[1])
-            item['nutrition']['Calories From Fat'] = int(row[2])
-            item['nutrition']['Total Fat (g)'] = int(row[3])
-            item['nutrition']['Saturated Fat (g)'] = int(row[4])
-            item['nutrition']['Trans Fat (g)'] = int(row[5])
-            item['nutrition']['Cholesterol (mg)'] = int(row[6])
-            item['nutrition']['Sodium (mg)'] = int(row[7])
-            item['nutrition']['Carbohydrates (g)'] = int(row[8])
-            item['nutrition']['Fiber (g)'] = int(row[9])
-            item['nutrition']['Sugars (g)'] = int(row[10])
-            item['nutrition']['Protein (g)'] = int(row[11])
-            item['nutrition']['Vitamin A (% DV)'] = int(row[12])
-            item['nutrition']['Vitamin C (% DV)'] = int(row[13])
-            item['nutrition']['Calcium (% DV)'] = int(row[14])
-            item['nutrition']['Iron (% DV)'] = int(row[15])
-            item['price'] = float(row[16])
+            item['nutrition']['Calories'] = convert(row[1])
+            item['nutrition']['Calories From Fat'] = convert(row[2])
+            item['nutrition']['Total Fat (g)'] = convert(row[3])
+            item['nutrition']['Saturated Fat (g)'] = convert(row[4])
+            item['nutrition']['Trans Fat (g)'] = convert(row[5])
+            item['nutrition']['Cholesterol (mg)'] = convert(row[6])
+            item['nutrition']['Sodium (mg)'] = convert(row[7])
+            item['nutrition']['Carbohydrates (g)'] = convert(row[8])
+            item['nutrition']['Fiber (g)'] = convert(row[9])
+            item['nutrition']['Sugars (g)'] = convert(row[10])
+            item['nutrition']['Protein (g)'] = convert(row[11])
+            item['nutrition']['Vitamin A (% DV)'] = convert(row[12])
+            item['nutrition']['Vitamin C (% DV)'] = convert(row[13])
+            item['nutrition']['Calcium (% DV)'] = convert(row[14])
+            item['nutrition']['Iron (% DV)'] = convert(row[15])
+            item['price'] = convert(row[16])
             item['allergens'] = []
             if row[17] == '1':
                 item['allergens'].append('dairy')
@@ -67,12 +67,17 @@ def main(file, restaurant):
 
             if row[21] == '1':
                 item['allergens'].append('egg')
-
+            item['rating count'] = 0
+            item['rating sum'] = 0
 
 
 
             db.foods.insert_one(item)
-            
+def convert(val):
+    try:
+        return float(val)
+    except:
+        return ''
             
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

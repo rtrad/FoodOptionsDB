@@ -4,10 +4,77 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    .checked {
+        color: orange;
+    }
+    </style>
 </head>
 <body>
-	<div class="d-inline-flex justify-content-center" style="flex-wrap: nowrap;">
+    <div class="modal fade" id="loginModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">login</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form class="modal-body" id="loginForm">
+                    <div class="form-group">
+                        username
+                        <input type="text" class="form-control" id="username"></input>
+                    </div>
+                    <div class="form-group">
+                        password
+                        <input type="password" class="form-control" id="password"></input>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="login();" data-dismiss="modal">login</button>
+                    <button type="button" class="btn btn-default" onclick="registerShow();" data-dismiss="modal">register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="signupModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">registration</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form class="modal-body" id="registrationForm">
+                    <div class="form-group">
+                        username
+                        <input type="text" class="form-control" id="username_reg">
+                    </div>
+                    <div class="form-group">
+                        password
+                        <input type="password" class="form-control" id="password_reg">
+                    </div>
+                    <div class="form-group">
+                        re-enter password
+                        <input type="password" class="form-control" id="passwordre_reg">
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="register();">register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="nav">
+        <h2>
+            <a href="/" data-toggle="tooltip" data-placement="bottom" title="go home"><i class="fa fa-home"></i></a>
+            {% if session['logged-in'] %}
+            <a href="#" id="login" onclick="logout();" data-toggle="tooltip" data-placement="bottom" title="logout"><i class="fa fa-sign-out"></i></a>
+            {% else %}
+            <a href="#" id="login" onclick="loginShow();" data-toggle="tooltip" data-placement="bottom" title="login"><i class="fa fa-sign-in"></i></a>
+            {% endif %}
+            {{ 'compare items:' if pagetype == 'compare' else 'food item:' }}
+        </h2>
+	</div>
+    <div class="d-inline-flex justify-content-center" style="flex-wrap: nowrap;">
 	{% for item in items %}
 		<div class="p-4" style="min-width: 400px; width: 400px;">
             <div style="height: 50px; overflow:hidden; padding-bottom:8px;">
@@ -18,13 +85,19 @@
             <h5>&nbsp;from {{ item.restaurant.name }}
                 <span class="float-right"><b>${{ '?.??' if item.price == '' else '%0.2f' % item.price }}</b></span>
             </h5>
+            <div>
+                {% for i in range(1, 6) %}
+                    <span class="fa fa-star {{'checked' if item['rating count']>0 and (item['rating sum'] / item['rating count'])|round >= i}}" onclick="rate({{i}}, '{{item._id}}');"></span>
+                {% endfor %}
+                <span>{{ '( %0.1f / 5.0 ) from %d reviews' % (item['rating sum'] / item['rating count'], item['rating count']) if item['rating count']>0 else '(No ratings)'}}</span>
+            </div>
 			<div style="border-color:#6c757d; border:1px solid; border-radius:.25rem; padding: 8px;">
                 <div class="row">
                     <div class="col col-9">
                         <h3><b>Calories</b></h3>
                     </div>
                     <div class="col col-3">
-                        <h3 class="float-right"><b>{{ '%0.0f' % item.nutrition['Calories'] }}</b></h3>
+                        <h3 class="float-right"><b>{{ '%0.0f' % item.nutrition['Calories'] if item.nutrition['Calories'] is number else 'unknown'}}</b></h3>
                     </div>                
                 </div>
                 <div class="row">
@@ -32,7 +105,7 @@
                         <h6>&emsp;Calories from Fat</h6>
                     </div>
                     <div class="col col-3">
-                        <h6 class="float-right">{{ '%0.0f' % item.nutrition['Calories From Fat'] }}</h6>
+                        <h6 class="float-right">{{ '%0.0f' % item.nutrition['Calories From Fat'] if item.nutrition['Calories From Fat'] is number else 'unknown'}}</h6>
                     </div>                
                 </div>
                 
@@ -170,6 +243,24 @@
                 </div>
                 
 			</div>
+            <div>
+                <h3>Tags: {{ ', '.join(item.tags) if item.tags|length > 0 else 'None'}}</h3>
+                {# {% if not pagetype == 'compare' %} #}
+                    <div class="input-group">
+                        <input id="addtags_{{item._id}}" type="text" class="form-control" placeholder="enter new tag" style="border-color: black;">
+                        <div class="input-group-append">
+                            <button type="button" id="submitTag" class="btn btn-outline-secondary" onclick="addTag('{{item._id}}');" style="border-color:black;">add tag</button>
+                        </div>
+                    </div>
+                {# {% endif %} #}
+            </div>
+            {% if similar_items %}
+                <hr/>
+                <h3>Similar items:</h3>
+                {% for similar in similar_items %}
+                    <h5><a href="/fooditem/{{ similar._id }}">{{ similar.name }}</a></h5>
+                {% endfor %}
+            {% endif %}
 		</div>
 	{% endfor %}
 	</div>
@@ -178,4 +269,120 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
+    <script type="text/javascript">
+    
+        function login() {
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var payload = {'username' : username, 'password' : password};
+            console.log(payload);
+            $.ajax({
+                type: "POST",
+                url: "/login", 
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify({'payload' : payload}), 
+                success: function(data) {
+                    $('#login').attr('onclick','logout();');
+                    $('#login').attr('data-original-title','logout');
+                    $('#login').empty().append($('<i class="fa fa-sign-out"></i>'));
+                    $('#nav').append($('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Login successful.</div>'));
+                }, 
+                error: function(data) {
+                    $('#nav').append($('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error</strong> Login failed.</div>'));
+                }
+            });
+            $('#loginForm')[0].reset();
+        }
+        
+        function logout() {
+            $.ajax({
+                type: "POST",
+                url: "/logout", 
+                success: function(data) {
+                    $('#login').attr('onclick','loginShow();');
+                    $('#login').attr('data-original-title','login');
+                    $('#login').empty().append($('<i class="fa fa-sign-in"></i>'));
+                    $('#nav').append($('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Logout successful.</div>'));
+                }, 
+                error: function(data) {
+                    $('#nav').append($('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error</strong> Logout failed.</div>'));
+                }
+            });
+        }
+        
+        function register() {
+            if ($('#password_reg').val()!=false && $('#username_reg').val()!=false && $('#password_reg').val() == $('#passwordre_reg').val()){
+                var payload = {'username' : $('#username_reg').val(), 'password' : $('#password_reg').val()}
+                $.ajax({
+                    type: "POST",
+                    url: "/register", 
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'payload' : payload}), 
+                    success: function(data) {
+                        $('#login').attr('onclick','logout();');
+                        $('#login').attr('data-original-title','logout');
+                        $('#login').empty().append($('<i class="fa fa-sign-out"></i>'));
+                        $('#nav').append($('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Registration successful.</div>'));
+                    }, 
+                    error: function(data) {
+                        $('#nav').append($('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error</strong> Registration failed (username exists).</div>'));
+                    }
+                });
+            } else {
+                alert('error: re-enter username and password');
+            }
+            $('#registrationForm')[0].reset();
+        }
+        
+        function loginShow() {
+            $('#loginModal').modal();
+        }
+      
+        function registerShow(){
+            $('#signupModal').modal();
+        }
+        
+        function rate(value, id){
+            var payload = {'id' : id, 'value' : value};
+            $.ajax({
+                type: "POST",
+                url: "/rate", 
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify({'payload' : payload}),
+                success: function(data) {
+                    location.reload()
+                }, 
+                error: function(data) {
+                    alert('you must be logged in to rate food items');
+                }
+            });
+        }
+        
+        function addTag(id) {
+            var tag = $('#addtags_' + id).val()
+            if (tag.trim()) {
+                var payload = {'tag' : tag, 'id' : id};
+                $.ajax({
+                    type: "POST",
+                    url: "/tag", 
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({'payload' : payload}),
+                    success: function(data) {
+                        location.reload()
+                    }, 
+                    error: function(data) {
+                        alert('you must be logged-in to add tags');
+                    }
+                });
+            }
+        }
+        
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();   
+        });
+    </script>
 </body>
